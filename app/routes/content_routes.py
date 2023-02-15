@@ -1,7 +1,7 @@
 from app import db
 from app.models.content import Content
-from app.models.customer import Customer
-from app.models.rental import Rental
+from app.models.user import User
+from app.models.watchlist import Watchlist
 # from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
@@ -55,40 +55,40 @@ def delete_one_content(content_id):
     
     return make_response(jsonify(content_info.to_dict()), 200)
 
-@contents_bp.route("/<content_id>/rentals", methods=["GET"])
-def get_current_rentals(content_id):
+@contents_bp.route("/<content_id>/watchlists", methods=["GET"])
+def get_current_watchlists(content_id):
     validate_model(Content, content_id)
-    customer_query = Customer.query.join(Rental, Rental.customer_id==Customer.id).filter(Rental.content_id==content_id)
+    user_query = User.query.join(Watchlist, Watchlist.user_id==User.id).filter(Watchlist.content_id==content_id)
 
     sort_query = request.args.get("sort")
     if sort_query:
         if sort_query == "name":
-            customer_query = customer_query.order_by(Customer.name.asc())
+            user_query = user_query.order_by(User.name.asc())
         elif sort_query == "postal_code":
-            customer_query = customer_query.order_by(Customer.postal_code.asc())
+            user_query = user_query.order_by(User.postal_code.asc())
         elif sort_query == "invalid":
-            customer_query = customer_query.order_by(Customer.id.asc())
+            user_query = user_query.order_by(User.id.asc())
     else:
-        customer_query = customer_query.order_by(Customer.id.asc())
+        user_query = user_query.order_by(User.id.asc())
 
     count_query = request.args.get("count")
     if count_query:
         if count_query == "invalid":
-            customer_query = customer_query
+            user_query = user_query
         else:
-            customer_query = customer_query.limit(count_query)
+            user_query = user_query.limit(count_query)
     
     page_num_query = request.args.get("page_num")
     if page_num_query:
         if page_num_query == "invalid":
-            customer_query = customer_query
+            user_query = user_query
         else:
             offset_query = str(int(count_query) * (int(page_num_query) - 1))
-            customer_query = customer_query.offset(offset_query)
+            user_query = user_query.offset(offset_query)
     
-    rentals_response = []
-    customers = customer_query.all()
-    for customer in customers:
-            rentals_response.append(customer.to_dict())
+    watchlists_response = []
+    users = user_query.all()
+    for user in users:
+            watchlists_response.append(user.to_dict())
 
-    return jsonify(rentals_response)
+    return jsonify(watchlists_response)

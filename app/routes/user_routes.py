@@ -58,7 +58,7 @@ def get_current_watchlists(user_id):
     user = validate_model(User, user_id)
 
     watchlists_response = []
-    for content in users.watchLists:
+    for content in users.watchlists:
         watchlists_response.append(content.to_dict())
         
     return jsonify(watchlists_response)

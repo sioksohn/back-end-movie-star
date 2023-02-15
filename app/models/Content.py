@@ -7,7 +7,7 @@ class Content(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     media_type = db.Column(db.String, nullable=False)
     vote_average = db.Column(db.Float, nullable=False)
-    watchLists = db.relationship("WatchList", back_populates="content") #users
+    watchlists = db.relationship("Watchlist", back_populates="content") #users
     # genre = db.Column(db.String)     
 
     def to_dict(self):
@@ -21,9 +21,9 @@ class Content(db.Model):
         }
 
         watched_users = []
-        for watched_user in self.watchLists:
+        for watched_user in self.watchlists:
             watched_users.append(watched_user.to_dict())
-        content_dict["watchLists"] = watched_users
+        content_dict["watchlists"] = watched_users
         
         return content_dict
 

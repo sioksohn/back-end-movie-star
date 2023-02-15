@@ -6,7 +6,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     # password = db.Column(db.String, nullable=False)
-    watchLists = db.relationship("WatchList", back_populates="user") #contents
+    watchlists = db.relationship("Watchlist", back_populates="user") #contents
 
 def to_dict(self):
     user_dict = {
@@ -16,9 +16,9 @@ def to_dict(self):
         # "password": self.password
     }
     watched_contents = []
-    for watched_content in self.watchLists:
+    for watched_content in self.watchlists:
         watched_contents.append(watched_content.to_dict())
-    user_dict["watchLists"] = watched_contents
+    user_dict["watchlists"] = watched_contents
     
     return user_dict
 

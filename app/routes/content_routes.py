@@ -2,7 +2,7 @@ from app import db
 from app.models.content import Content
 from app.models.viewer import Viewer
 from app.models.watchlist import Watchlist
-# from app.models.model_helpers import *
+from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
 contents_bp = Blueprint("contents_bp", __name__, url_prefix="/contents")

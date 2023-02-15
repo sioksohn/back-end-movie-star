@@ -13,7 +13,7 @@ class Content(db.Model):
     def to_dict(self):
         content_dict = {
             "id" :self.id, 
-            "poster" :self.name,
+            "poster" :self.poster,
             "title" :self.title, 
             "date" :self.date, 
             "media_type" :self.media_type, 

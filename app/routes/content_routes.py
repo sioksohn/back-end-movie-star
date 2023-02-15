@@ -5,7 +5,6 @@ from app.models.watchlist import Watchlist
 # from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
-
 contents_bp = Blueprint("contents_bp", __name__, url_prefix="/contents")
 
 @contents_bp.route("", methods=["POST"])
@@ -38,9 +37,11 @@ def update_one_content(content_id):
     content_info = validate_model(Content, content_id)
     request_body = validate_request_body(Content, request.get_json())
 
+    content_info.poster = request_body["poster"]
     content_info.title = request_body["title"]
-    content_info.release_date = request_body["release_date"]
-    content_info.total_inventory = request_body["total_inventory"]
+    content_info.date = request_body["date"]
+    content_info.media_type = request_body["media_type"]
+    content_info.vote_average = request_body["vote_average"]
 
     db.session.commit()
 
@@ -48,47 +49,9 @@ def update_one_content(content_id):
 
 @contents_bp.route("/<content_id>",methods=["DELETE"])
 def delete_one_content(content_id):
-    content_info = validate_model(Content, content_id)
+    content = validate_model(Content, content_id)
     
-    db.session.delete(content_info)
+    db.session.delete(content)
     db.session.commit()
     
     return make_response(jsonify(content_info.to_dict()), 200)
-
-@contents_bp.route("/<content_id>/watchlists", methods=["GET"])
-def get_current_watchlists(content_id):
-    validate_model(Content, content_id)
-    user_query = User.query.join(Watchlist, Watchlist.user_id==User.id).filter(Watchlist.content_id==content_id)
-
-    sort_query = request.args.get("sort")
-    if sort_query:
-        if sort_query == "name":
-            user_query = user_query.order_by(User.name.asc())
-        elif sort_query == "postal_code":
-            user_query = user_query.order_by(User.postal_code.asc())
-        elif sort_query == "invalid":
-            user_query = user_query.order_by(User.id.asc())
-    else:
-        user_query = user_query.order_by(User.id.asc())
-
-    count_query = request.args.get("count")
-    if count_query:
-        if count_query == "invalid":
-            user_query = user_query
-        else:
-            user_query = user_query.limit(count_query)
-    
-    page_num_query = request.args.get("page_num")
-    if page_num_query:
-        if page_num_query == "invalid":
-            user_query = user_query
-        else:
-            offset_query = str(int(count_query) * (int(page_num_query) - 1))
-            user_query = user_query.offset(offset_query)
-    
-    watchlists_response = []
-    users = user_query.all()
-    for user in users:
-            watchlists_response.append(user.to_dict())
-
-    return jsonify(watchlists_response)

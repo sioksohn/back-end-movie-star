@@ -5,15 +5,12 @@ from app.models.watchlist import Watchlist
 # from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
-
 users_bp = Blueprint("users_bp", __name__, url_prefix="/users")
 
 @users_bp.route("", methods=["POST"])
 def create_user():
-
-    user_data = validate_request_body(User, request.get_json())
-    user_data["contents_checked_out_count"] = 0
-    new_user = User.from_dict(user_data)
+    request_body = validate_request_body(User, request.get_json())
+    new_user = User.from_dict(request_body)
 
     db.session.add(new_user)
     db.session.commit()
@@ -22,35 +19,7 @@ def create_user():
 
 @users_bp.route("", methods=["GET"])
 def get_users():
-    user_query = User.query
-
-    sort_query = request.args.get("sort")
-    if sort_query:
-        if sort_query == "name":
-            user_query = user_query.order_by(User.name.asc())
-        elif sort_query == "postal_code":
-            user_query = user_query.order_by(User.postal_code.asc())
-        elif sort_query == "invalid":
-            user_query = user_query.order_by(User.id.asc())
-    else:
-        user_query = user_query.order_by(User.id.asc())
-    
-    count_query = request.args.get("count")
-    if count_query:
-        if count_query == "invalid":
-            user_query = user_query
-        else:
-            user_query = user_query.limit(count_query)
-    
-    page_num_query = request.args.get("page_num")
-    if page_num_query:
-        if page_num_query == "invalid":
-            user_query = user_query
-        else:
-            offset_query = str(int(count_query) * (int(page_num_query) - 1))
-            user_query = user_query.offset(offset_query)
-
-    users = user_query.all()
+    users = User.query.all()
     user_response = []
     for user in users:
         user_response.append(user.to_dict())
@@ -68,8 +37,8 @@ def update_one_user(user_id):
     request_body = validate_request_body(User, request.get_json())
 
     user_info.name = request_body["name"]
-    user_info.postal_code = request_body["postal_code"]
-    user_info.phone = request_body["phone"]
+    user_info.email = request_body["email"]
+    # user_info.password = request_body["password"]
 
     db.session.commit()
 
@@ -84,37 +53,12 @@ def delete_one_user(user_id):
     
     return make_response(jsonify(user.to_dict()), 200)
 
-@users_bp.route("/<user_id>/watchlists", methods=["GET"])
+@users_bp.route("/<user_id>/watchlist", methods=["GET"])
 def get_current_watchlists(user_id):
-    validate_model(User, user_id)
-    content_query = Content.query.join(Watchlist, Watchlist.content_id==Content.id).filter(Watchlist.user_id==user_id)
-    sort_query = request.args.get("sort")
-    if sort_query:
-        if sort_query == "title":
-            content_query = content_query.order_by(Content.title.asc())
-        elif sort_query == "invalid":
-            content_query = content_query.order_by(Content.id.asc())
-    else:
-        content_query = content_query.order_by(Content.id.asc())
-    
-    count_query = request.args.get("count")
-    if count_query:
-        if count_query == "invalid":
-            content_query = content_query
-        else:
-            content_query = content_query.limit(count_query)
-    
-    page_num_query = request.args.get("page_num")
-    if page_num_query:
-        if page_num_query == "invalid":
-            content_query = content_query
-        else:
-            offset_query = str(int(count_query) * (int(page_num_query) - 1))
-            content_query = content_query.offset(offset_query)
-    contents = content_query.all()
+    user = validate_model(User, user_id)
 
     watchlists_response = []
-    for content in contents:
+    for content in users.watchLists:
         watchlists_response.append(content.to_dict())
         
     return jsonify(watchlists_response)

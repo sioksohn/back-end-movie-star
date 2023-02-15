@@ -10,7 +10,7 @@ viewers_bp = Blueprint("viewers_bp", __name__, url_prefix="/viewers")
 @viewers_bp.route("", methods=["POST"])
 def create_viewer():
     request_body = validate_request_body(Viewer, request.get_json())
-    new_viewer = viewer.from_dict(request_body)
+    new_viewer = Viewer.from_dict(request_body)
 
     db.session.add(new_viewer)
     db.session.commit()
@@ -56,6 +56,23 @@ def delete_one_viewer(viewer_id):
 @viewers_bp.route("/<viewer_id>/watchlist", methods=["GET"])
 def get_current_watchlists(viewer_id):
     viewer = validate_model(Viewer, viewer_id)
+
+    watchlists_response = []
+    for content in viewers.watchlists:
+        watchlists_response.append(content.to_dict())
+        
+    return jsonify(watchlists_response)
+
+@viewers_bp.route("/<viewer_id>/watchlist", methods=["POST"])
+def create_content_to_watchlists(viewer_id):
+    viewer = validate_model(Viewer, viewer_id)
+    request_body = validate_request_body(Content, request.get_json())
+    new_content = Content.from_dict(request_body)
+
+    db.session.add(new_content)
+    db.session.commit()
+
+    # return make_response(jsonify(new_content.to_dict()), 201)
 
     watchlists_response = []
     for content in viewers.watchlists:

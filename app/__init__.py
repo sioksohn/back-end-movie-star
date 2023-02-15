@@ -26,6 +26,7 @@ def create_app(test_config=None):
     # import models for Alembic Setup
     from app.models.content import Content
     from app.models.viewer import Viewer
+    from app.models.watchlist import Watchlist
 
     # Setup DB
     db.init_app(app)
@@ -36,5 +37,8 @@ def create_app(test_config=None):
 
     from .routes.content_routes import contents_bp
     app.register_blueprint(contents_bp)
+
+    from .routes.watchlist_routes import watchlist_bp
+    app.register_blueprint(watchlist_bp)
 
     return app

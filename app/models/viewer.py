@@ -6,23 +6,23 @@ class Viewer(db.Model):
     email = db.Column(db.String, nullable=False)
     watchlists = db.relationship("Watchlist", back_populates="viewer") #contents
 
-def to_dict(self):
-    viewer_dict = {
-        "id": self.id,
-        "name": self.name,
-        "email": self.email,
-    }
-    watched_contents = []
-    for watched_content in self.watchlists:
-        watched_contents.append(watched_content.to_dict())
-    viewer_dict["watchlists"] = watched_contents
-    
-    return viewer_dict
+    def to_dict(self):
+        viewer_dict = {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+        }
+        watched_contents = []
+        for watched_content in self.watchlists:
+            watched_contents.append(watched_content.to_dict())
+        viewer_dict["watchlists"] = watched_contents
+        
+        return viewer_dict
 
-@classmethod
-def from_dict(cls, request_body):
-    new_viewer = cls(
-        name = request_body["name"],
-        email = request_body["email"]
-    )
-    return new_viewer
+    @classmethod
+    def from_dict(cls, request_body):
+        new_viewer = cls(
+            name = request_body["name"],
+            email = request_body["email"]
+        )
+        return new_viewer

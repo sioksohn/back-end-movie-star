@@ -2,12 +2,12 @@ from app import db
 
 class Content(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    poster = db.Column(db.String)
+    poster = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     media_type = db.Column(db.String, nullable=False)
     vote_average = db.Column(db.Float, nullable=False)
-    watchlists = db.relationship("Watchlist", back_populates="content") #users
+    watchlists = db.relationship("Watchlist", back_populates="content") #viewers
     # genre = db.Column(db.String)     
 
     def to_dict(self):
@@ -20,10 +20,10 @@ class Content(db.Model):
             "vote_average" :self.vote_average   
         }
 
-        watched_users = []
-        for watched_user in self.watchlists:
-            watched_users.append(watched_user.to_dict())
-        content_dict["watchlists"] = watched_users
+        watched_viewers = []
+        for watched_viewer in self.watchlists:
+            watched_viewers.append(watched_viewer.to_dict())
+        content_dict["watchlists"] = watched_viewers
         
         return content_dict
 

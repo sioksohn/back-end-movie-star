@@ -25,14 +25,14 @@ def create_app(test_config=None):
     
     # import models for Alembic Setup
     from app.models.content import Content
-    from app.models.user import User
+    from app.models.viewer import Viewer
 
     # Setup DB
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .routes.user_routes import users_bp
-    app.register_blueprint(users_bp)
+    from .routes.viewer_routes import viewers_bp
+    app.register_blueprint(viewers_bp)
 
     from .routes.content_routes import contents_bp
     app.register_blueprint(contents_bp)

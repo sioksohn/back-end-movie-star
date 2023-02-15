@@ -1,8 +1,8 @@
 """add models
 
-Revision ID: 64a3eaba253a
+Revision ID: e916128c516e
 Revises: 
-Create Date: 2023-02-15 13:12:11.015496
+Create Date: 2023-02-15 14:55:21.366943
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '64a3eaba253a'
+revision = 'e916128c516e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,11 +34,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('watchlist',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('viewer_id', sa.Integer(), nullable=False),
     sa.Column('content_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['content_id'], ['content.id'], ),
     sa.ForeignKeyConstraint(['viewer_id'], ['viewer.id'], ),
-    sa.PrimaryKeyConstraint('viewer_id', 'content_id')
+    sa.PrimaryKeyConstraint('id', 'viewer_id', 'content_id')
     )
     # ### end Alembic commands ###
 

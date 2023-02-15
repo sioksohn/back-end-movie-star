@@ -54,28 +54,14 @@ def delete_one_viewer(viewer_id):
     return make_response(jsonify(viewer.to_dict()), 200)
 
 @viewers_bp.route("/<viewer_id>/watchlist", methods=["GET"])
-def get_current_watchlists(viewer_id):
+def get_current_watchlist(viewer_id):
     viewer = validate_model(Viewer, viewer_id)
+    content_query = Content.query.filter(Watchlist.viewer_id==viewer_id)
+    contents = content_query.all()
 
-    watchlists_response = []
-    for content in viewers.watchlists:
-        watchlists_response.append(content.to_dict())
+    watched_contents = []
+    for content in contents:
+
+        watched_contents.append(content.to_dict())
         
-    return jsonify(watchlists_response)
-
-@viewers_bp.route("/<viewer_id>/watchlist", methods=["POST"])
-def create_content_to_watchlists(viewer_id):
-    viewer = validate_model(Viewer, viewer_id)
-    request_body = validate_request_body(Content, request.get_json())
-    new_content = Content.from_dict(request_body)
-
-    db.session.add(new_content)
-    db.session.commit()
-
-    # return make_response(jsonify(new_content.to_dict()), 201)
-
-    watchlists_response = []
-    for content in viewers.watchlists:
-        watchlists_response.append(content.to_dict())
-        
-    return jsonify(watchlists_response)
+    return jsonify(watched_contents)

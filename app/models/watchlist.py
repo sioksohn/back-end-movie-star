@@ -2,6 +2,7 @@ from app import db
 
 class Watchlist(db.Model):
     __tablename__ = "watchlist"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     viewer_id = db.Column(db.Integer, db.ForeignKey('viewer.id'), primary_key=True,nullable=False )
     content_id = db.Column(db.Integer, db.ForeignKey('content.id'), primary_key=True,nullable=False)
     viewer = db.relationship("Viewer", back_populates="watchlists")

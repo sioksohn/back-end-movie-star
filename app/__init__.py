@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
-from app.models.content import Content
 
 db = SQLAlchemy()
 migrate = Migrate()

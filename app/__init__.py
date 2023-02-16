@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
+from app.models.content import Content
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -26,8 +27,7 @@ def create_app(test_config=None):
 
     # import models for Alembic Setup
     from app.models.viewer import Viewer
-    from app.models.watchlist import Watchlist
-    from app.models.content import Content
+    from app.models.watchlist import Watchlist    
 
 
     from .routes.viewer_routes import viewers_bp

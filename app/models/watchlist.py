@@ -16,7 +16,7 @@ class Watchlist(db.Model):
             "id": self.id,
             "viewer_id": self.viewer_id,
             "content_id": self.content_id,
-            "viewer_rate": self.viewer_rate
+            "viewer_rate": self.viewer_rate,
             "viewer_comment": self.viewer_comment     
         }
         return watchlist_dict
@@ -25,8 +25,8 @@ class Watchlist(db.Model):
     def from_dict(cls, request_body):
         new_obj = cls(
             viewer_id = request_body["viewer_id"],
-            content_id = request_body["content_id"]
-            viewer_rate = request_body["viewer_rate"]
+            content_id = request_body["content_id"],
+            viewer_rate = request_body["viewer_rate"],
             viewer_comment = request_body["viewer_comment"]
         )
         return new_obj

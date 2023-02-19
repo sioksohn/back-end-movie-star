@@ -7,7 +7,7 @@ class Content(db.Model):
     date = db.Column(db.String, nullable=False)
     media_type = db.Column(db.String, nullable=False)
     vote_average = db.Column(db.Float, nullable=False)
-    genre_ids = db.Column(db.Array(Integer))
+    genre_ids = db.Column(db.ARRAY(db.Integer))
     watchlists = db.relationship("Watchlist", back_populates="content") #viewers
     genres = db.relationship("Genre", secondary="content_genre", backref="contents")
 
@@ -43,7 +43,7 @@ class Content(db.Model):
             title = request_body["title"],
             date = request_body["date"],
             media_type = request_body["media_type"],
-            vote_average = request_body["vote_average"]
+            vote_average = request_body["vote_average"],
             genre_ids = request_body["genre_ids"]
         )
         return new_content

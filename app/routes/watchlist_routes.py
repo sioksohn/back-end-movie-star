@@ -2,6 +2,8 @@ from app import db
 from app.models.viewer import Viewer
 from app.models.content import Content
 from app.models.watchlist import Watchlist
+from app.models.genre import Genre
+from app.models.content_genre import ContentGenre
 from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
@@ -21,7 +23,7 @@ def create_watchlist():
 
 @watchlist_bp.route("", methods=["GET"])
 def read_all_watchlists():
-    watchlist_query = Watchlist.query
+    watchlist_query = Watchlist.query.all()
     watchlist_response = []
     for watchlist in watchlist_query:
         watchlist_response.append(watchlist.to_dict())

@@ -1,6 +1,6 @@
 from app import db
-from app.models.content import Content
 from app.models.viewer import Viewer
+from app.models.content import Content
 from app.models.watchlist import Watchlist
 from app.models.genre import Genre
 from app.models.content_genre import ContentGenre

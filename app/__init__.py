@@ -36,7 +36,13 @@ def create_app(test_config=None):
     from .routes.content_routes import contents_bp
     app.register_blueprint(contents_bp)
 
+     from .routes.genre_routes import genres_bp
+    app.register_blueprint(genres_bp)
+
     from .routes.watchlist_routes import watchlist_bp
     app.register_blueprint(watchlist_bp)
 
+    from .routes.content_genre_routes import content_genre_bp
+    app.register_blueprint(content_genre_bp)
+    
     return app

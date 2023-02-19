@@ -1,9 +1,12 @@
 from app import db
 
 class ContentGenre(db.Model):
-    __tablename__ = "content_genre"    
-    content_id = db.Column(db.Integer, db.ForeignKey('content.id'), primary_key=True, nullable=False)
-    genre_id = db.Column(db.Integer, db.ForeignKey('genre.id'), primary_key=True, nullable=False )
+    __tablename__ = "content_genre"  
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  
+    content_id = db.Column(db.Integer, db.ForeignKey('content.id'), nullable=False)
+    genre_id = db.Column(db.Integer, db.ForeignKey('genre.id'), nullable=False )
+    content = db.relationship("Content", back_populates="contents_genres")
+    genre = db.relationship("Genre", back_populates="contents_genres")
 
     def to_dict(self):
         content_genre_dict = {

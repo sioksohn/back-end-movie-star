@@ -3,7 +3,7 @@ from app import db
 class Genre(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    contents = db.relationship("Content", secondary="content_genre", backref="genres")
+    contents_genres = db.relationship("Content", back_populates="genre")
 
     def to_dict(self):
         genre_dict = {

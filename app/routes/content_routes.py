@@ -2,6 +2,8 @@ from app import db
 from app.models.content import Content
 from app.models.viewer import Viewer
 from app.models.watchlist import Watchlist
+from app.models.genre import Genre
+from app.models.content_genre import ContentGenre
 from app.models.model_helpers import *
 from flask import Blueprint, jsonify, abort, make_response, request
 
@@ -42,6 +44,7 @@ def update_one_content(content_id):
     content_info.date = request_body["date"]
     content_info.media_type = request_body["media_type"]
     content_info.vote_average = request_body["vote_average"]
+    content_info.genre_ids = request_body["genre_ids"]
 
     db.session.commit()
 

@@ -26,7 +26,8 @@ def create_app(test_config=None):
 
     # import models for Alembic Setup
     from app.models.viewer import Viewer
-    from app.models.watchlist import Watchlist    
+    from app.models.watchlist import Watchlist
+    from app.models.content import Content  
 
 
     from .routes.viewer_routes import viewers_bp

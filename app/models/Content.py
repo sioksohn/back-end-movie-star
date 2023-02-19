@@ -1,14 +1,15 @@
 from app import db
 
 class Content(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
     poster = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.String, nullable=False)
     media_type = db.Column(db.String, nullable=False)
     vote_average = db.Column(db.Float, nullable=False)
+    genre_ids = db.Column(db.Array(Integer))
     watchlists = db.relationship("Watchlist", back_populates="content") #viewers
-    # genre = db.Column(db.String)     
+    genres = db.relationship("Genre", secondary="content_genre", backref="contents")
 
     def to_dict(self):
         content_dict = {
@@ -17,23 +18,32 @@ class Content(db.Model):
             "title" :self.title, 
             "date" :self.date, 
             "media_type" :self.media_type, 
-            "vote_average" :self.vote_average   
+            "vote_average" :self.vote_average,
+            "genre_ids": self.genre_ids
         }
 
-        watched_viewers = []
+        watched_users = []
         for watched_viewer in self.watchlists:
-            watched_viewers.append(watched_viewer.to_dict())
-        content_dict["watchlists"] = watched_viewers
-        
+            watched_users.append(watched_viewer.to_dict())
+        content_dict["watchlists"] = watched_users
+
+
+        content_genres = []
+        for genre in self.genres:
+            content_genres.append(genre.to_dict())
+        content_dict["genres"] = content_genres
+
         return content_dict
 
     @classmethod
     def from_dict(cls, request_body):
         new_content = cls(
+            id = request_body["id"],
             poster = request_body["poster"],
             title = request_body["title"],
             date = request_body["date"],
             media_type = request_body["media_type"],
             vote_average = request_body["vote_average"]
+            genre_ids = request_body["genre_ids"]
         )
         return new_content

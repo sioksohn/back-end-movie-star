@@ -25,11 +25,11 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
 
     # import models for Alembic Setup
+    from app.models.content import Content
     from app.models.genre import Genre
     from app.models.viewer import Viewer
     from app.models.content_genre import ContentGenre
     from app.models.watchlist import Watchlist
-    from app.models.content import Content
 
     from .routes.viewer_routes import viewers_bp
     app.register_blueprint(viewers_bp)

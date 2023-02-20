@@ -57,4 +57,4 @@ def delete_one_content(content_id):
     db.session.delete(content)
     db.session.commit()
     
-    return make_response(jsonify(content_info.to_dict()), 200)
+    return make_response(jsonify(content.to_dict()), 200)

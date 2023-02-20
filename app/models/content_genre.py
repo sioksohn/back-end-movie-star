@@ -10,6 +10,7 @@ class ContentGenre(db.Model):
 
     def to_dict(self):
         content_genre_dict = {
+            "content_genre_id": self.id,
             "content_id": self.content_id,
             "genre_id": self.genre_id,    
         }

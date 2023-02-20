@@ -21,9 +21,18 @@ def create_genre():
 
 @genres_bp.route("", methods=["GET"])
 def get_genres():
-    genres = genre.query.all()
+    genres = Genre.query.all()
     genre_response = []
     for genre in genres:
         genre_response.append(genre.to_dict())
 
     return jsonify(genre_response)
+
+@genres_bp.route("/<genre_id>",methods=["DELETE"])
+def delete_one_genre(genre_id):
+    genre = validate_model(Genre, genre_id)
+    
+    db.session.delete(genre)
+    db.session.commit()
+    
+    return make_response(jsonify(genre.to_dict()), 200)

@@ -20,7 +20,7 @@ def validate_request_body(cls, request_body):
         abort(make_response({"details":f"Request body is empty."}, 400))
 
     attributes = cls.__table__.columns.keys()
-    if cls.__name__== "Viewer" or  cls.__name__== "Watchlist":
+    if cls.__name__== "Viewer" or  cls.__name__== "Watchlist" or cls.__name__=="ContentGenre":
         if  "id" in attributes: 
             attributes.remove("id")
 

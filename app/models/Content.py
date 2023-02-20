@@ -9,7 +9,7 @@ class Content(db.Model):
     vote_average = db.Column(db.Float, nullable=False)
     genre_ids = db.Column(db.ARRAY(db.Integer))
     watchlists = db.relationship("Watchlist", back_populates="content") #viewers
-    contents_genres = db.relationship("Genre", back_populates="content")
+    contents_genres = db.relationship("ContentGenre", back_populates="content")
 
     def to_dict(self):
         content_dict = {
@@ -28,10 +28,12 @@ class Content(db.Model):
         content_dict["watchlists"] = watched_users
 
 
-        content_genres = []
-        for genre in self.genres:
-            content_genres.append(genre.to_dict())
-        content_dict["genres"] = content_genres
+        content_genres_response = []
+        
+        for genre in self.contents_genres:
+            content_genres_response.append(genre.to_dict())
+        content_dict["contents_genres"] = content_genres_response
+
 
         return content_dict
 

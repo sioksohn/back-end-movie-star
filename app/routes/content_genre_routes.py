@@ -32,3 +32,12 @@ def read_all_content_genre():
         content_genre_response.append(content_genre.to_dict())
 
     return jsonify(content_genre_response)
+
+@content_genre_bp.route("/<content_genre_id>",methods=["DELETE"])
+def delete_one_content_genre(content_genre_id):
+    content_genre = validate_model(ContentGenre, content_genre_id)
+    
+    db.session.delete(content_genre)
+    db.session.commit()
+    
+    return make_response(jsonify(content_genre.to_dict()), 200)
